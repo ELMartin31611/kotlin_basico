@@ -1,56 +1,63 @@
-class libro (
-    val titulo: String,
-    val autor: String,
-    val publicacion: Int,
-    val paginas: Int
+open class Vehiculo(
+    val marca: String,
+    val modelo: String,
+    val anio: Int
 ) {
 
-    fun mostrarInfo(){
-
-        println("Titulo: $titulo")
-        println("Autor: $autor")
-        println("Año de publicacion: $publicacion")
-        println("Numero de paginas: $paginas")
-
-
-    }
-
-
-    fun verificar(){
-
-        if( publicacion < 2000 ){
-            println("El libro es antiguo")
-        } else {
-            println("El libro es reciente")
-        }
+    open fun mostrarDatos() {
+        println("Marca: $marca")
+        println("Modelo: $modelo")
+        println("Año: $anio")
     }
 }
 
+class Auto(
+    marca: String,
+    modelo: String,
+    anio: Int,
+    val numeroPuertas: Int
+) : Vehiculo(marca, modelo, anio) {
 
-fun main () {
+    override fun mostrarDatos() {
+        println("=== AUTO ===")
+        super.mostrarDatos()
+        println("Número de puertas: $numeroPuertas")
+    }
+}
 
-    val libro1 = libro(
-        "Don Quijote",
-        "Miguel de Cervantes",
-        1605,
-        863
+class Motocicleta(
+    marca: String,
+    modelo: String,
+    anio: Int,
+    val cilindrada: Int
+) : Vehiculo(marca, modelo, anio) {
+
+    override fun mostrarDatos() {
+        println("=== MOTOCICLETA ===")
+        super.mostrarDatos()
+        println("Cilindrada: $cilindrada cc")
+    }
+}
+
+fun main() {
+
+    val auto = Auto(
+        "Toyota",
+        "Corolla",
+        2024,
+        4
     )
 
-
-    val libro2 = libro(
-        "Five Nights at Freddy's: The Silver Eyes",
-        "Scott Cawthon",
-        2015,
-        330
-
+    val moto = Motocicleta(
+        "Yamaha",
+        "R15",
+        2023,
+        155
     )
 
-    libro1.mostrarInfo()
-    libro1.verificar()
+    auto.mostrarDatos()
 
     println()
 
-    libro2.mostrarInfo()
-    libro2.verificar()
-
+    moto.mostrarDatos()
 }
