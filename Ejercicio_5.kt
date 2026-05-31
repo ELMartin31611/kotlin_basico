@@ -1,56 +1,137 @@
-class libro (
+class Libro(
+    val id: Int,
     val titulo: String,
-    val autor: String,
-    val publicacion: Int,
-    val paginas: Int
+    val autor: String
 ) {
 
-    fun mostrarInfo(){
+    private var disponible = true
 
-        println("Titulo: $titulo")
-        println("Autor: $autor")
-        println("Año de publicacion: $publicacion")
-        println("Numero de paginas: $paginas")
-
-
+    fun estaDisponible(): Boolean {
+        return disponible
     }
 
+    fun prestar(): Boolean {
 
-    fun verificar(){
-
-        if( publicacion < 2000 ){
-            println("El libro es antiguo")
+        return if (disponible) {
+            disponible = false
+            true
         } else {
-            println("El libro es reciente")
+            false
+        }
+    }
+
+    fun devolver(): Boolean {
+
+        return if (!disponible) {
+            disponible = true
+            true
+        } else {
+            false
+        }
+    }
+
+    fun mostrarInfo() {
+
+        println(
+            "ID: $id | Título: $titulo | Autor: $autor | Estado: ${
+                if (disponible) "Disponible" else "Prestado"
+            }"
+        )
+    }
+}
+
+class Biblioteca {
+
+    private val libros = mutableListOf<Libro>()
+
+    fun registrarLibro(libro: Libro) {
+        libros.add(libro)
+    }
+
+    fun listarLibrosDisponibles() {
+
+        println("=== LIBROS DISPONIBLES ===")
+
+        libros.filter { it.estaDisponible() }
+            .forEach { it.mostrarInfo() }
+    }
+
+    fun prestarLibro(id: Int) {
+
+        val libro = libros.find { it.id == id }
+
+        if (libro == null) {
+            println("Libro no encontrado.")
+            return
+        }
+
+        if (libro.prestar()) {
+            println("Libro prestado correctamente.")
+        } else {
+            println("El libro ya está prestado.")
+        }
+    }
+
+    fun devolverLibro(id: Int) {
+
+        val libro = libros.find { it.id == id }
+
+        if (libro == null) {
+            println("Libro no encontrado.")
+            return
+        }
+
+        if (libro.devolver()) {
+            println("Libro devuelto correctamente.")
+        } else {
+            println("El libro ya estaba disponible.")
+        }
+    }
+
+    fun buscarPorTitulo(titulo: String) {
+
+        val encontrados = libros.filter {
+            it.titulo.contains(titulo, ignoreCase = true)
+        }
+
+        if (encontrados.isEmpty()) {
+            println("No se encontraron libros.")
+        } else {
+            encontrados.forEach { it.mostrarInfo() }
         }
     }
 }
 
+fun main() {
 
-fun main () {
+    val biblioteca = Biblioteca()
 
-    val libro1 = libro(
-        "Don Quijote",
-        "Miguel de Cervantes",
-        1605,
-        863
+    biblioteca.registrarLibro(
+        Libro(1, "1984", "George Orwell")
     )
 
-
-    val libro2 = libro(
-        "Five Nights at Freddy's: The Silver Eyes",
-        "Scott Cawthon",
-        2015,
-        330
-
+    biblioteca.registrarLibro(
+        Libro(2, "El Principito", "Antoine de Saint-Exupéry")
     )
 
-    libro1.mostrarInfo()
-    libro1.verificar()
+    biblioteca.registrarLibro(
+        Libro(3, "Clean Code", "Robert Martin")
+    )
 
-    println()
+    biblioteca.listarLibrosDisponibles()
 
-    libro2.mostrarInfo()
-    libro2.verificar()
+    println("\nPrestando libro ID 1")
+    biblioteca.prestarLibro(1)
 
+    println("\nIntentando prestar nuevamente el ID 1")
+    biblioteca.prestarLibro(1)
+
+    println("\nBuscar libro '1984'")
+    biblioteca.buscarPorTitulo("1984")
+
+    println("\nDevolver libro ID 1")
+    biblioteca.devolverLibro(1)
+
+    println("\nLibros disponibles:")
+    biblioteca.listarLibrosDisponibles()
 }
