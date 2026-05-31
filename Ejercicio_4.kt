@@ -1,56 +1,37 @@
-class libro (
-    val titulo: String,
-    val autor: String,
-    val publicacion: Int,
-    val paginas: Int
-) {
+interface MetodoPago {
+    fun procesarPago(monto: Double)
+}
 
-    fun mostrarInfo(){
+class PagoEfectivo : MetodoPago {
 
-        println("Titulo: $titulo")
-        println("Autor: $autor")
-        println("Año de publicacion: $publicacion")
-        println("Numero de paginas: $paginas")
-
-
-    }
-
-
-    fun verificar(){
-
-        if( publicacion < 2000 ){
-            println("El libro es antiguo")
-        } else {
-            println("El libro es reciente")
-        }
+    override fun procesarPago(monto: Double) {
+        println("Pago en efectivo realizado por $$monto")
     }
 }
 
+class PagoTarjeta : MetodoPago {
 
-fun main () {
+    override fun procesarPago(monto: Double) {
+        println("Pago con tarjeta aprobado por $$monto")
+    }
+}
 
-    val libro1 = libro(
-        "Don Quijote",
-        "Miguel de Cervantes",
-        1605,
-        863
+class PagoTransferencia : MetodoPago {
+
+    override fun procesarPago(monto: Double) {
+        println("Transferencia bancaria realizada por $$monto")
+    }
+}
+
+fun main() {
+
+    val metodosPago: List<MetodoPago> = listOf(
+        PagoEfectivo(),
+        PagoTarjeta(),
+        PagoTransferencia()
     )
 
-
-    val libro2 = libro(
-        "Five Nights at Freddy's: The Silver Eyes",
-        "Scott Cawthon",
-        2015,
-        330
-
-    )
-
-    libro1.mostrarInfo()
-    libro1.verificar()
-
-    println()
-
-    libro2.mostrarInfo()
-    libro2.verificar()
-
+    for (metodo in metodosPago) {
+        metodo.procesarPago(100.0)
+    }
 }
